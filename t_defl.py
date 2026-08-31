@@ -42,3 +42,9 @@ t_defl = (m_1**2 * v_1**3) / (8 * np.pi * Z_1**2 * Z_2**2 * e**4 * n_2 * np.log(
 
 t_defl_yr = t_defl*(1/(np.pi * 1e7)) # convert the deflection time to years
 print("Deflection time is %3.3e yr" % t_defl_yr)
+
+
+#---------
+# distance over which the region stretchs
+d = v_1 * t_defl
+print("Distance", d, "cm")
