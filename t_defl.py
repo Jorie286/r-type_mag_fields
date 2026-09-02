@@ -15,9 +15,11 @@ Z_2 = 1 # proton charge
 
 z = 20 # redshift 
 
+Psi = 2.70118 # value from original problem: 1.655
+
 
 #---------
-KE = 1.655 * k * T # kinetic energy of the electron
+KE = Psi * k * T # kinetic energy of the electron
 
 v_1 = np.sqrt(2 * KE / m_1) # cm/s (note: this is the computation from the exam problem)
 print("Electron velocity: %2.3e cm/s" % v_1)
