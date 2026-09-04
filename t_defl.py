@@ -13,7 +13,7 @@ Z_1 = -1 # electron charge
 
 Z_2 = 1 # proton charge
 
-z = 20 # redshift 
+z = 20 # redshift
 
 Psi = 2.70118 # value from original problem: 1.655
 
@@ -49,4 +49,6 @@ print("Deflection time is %3.3e yr" % t_defl_yr)
 #---------
 # distance over which the region stretchs
 d = v_1 * t_defl
-print("Distance", d, "cm")
+#print("Distance", d, "cm")
+d_pc = d / 3.0857e18
+print("Distance", d_pc, "pc")
