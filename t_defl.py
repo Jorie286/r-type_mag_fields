@@ -39,7 +39,11 @@ n_e = n_2 # cm^-3 (assuming fully ionized hydrogen)
 
 #---------
 # calculating the values for t_defl
-Lambda = ((k**3 * T**3)/(np.pi * n_e ))**0.5 * (3/(2*np.abs(Z_1 * Z_2) * e**3)) # approx bmax / bmin
+# Lambda = ((k**3 * T**3)/(np.pi * n_e ))**0.5 * (3/(2*np.abs(Z_1 * Z_2) * e**3)) # approx bmax / bmin
+# print("Lambda value: %3.3e" % Lambda)
+
+Lambda = ((k * T)/(np.pi * n_e))**0.5 * ((m_1 * v_1**2) / 2) * 1/(np.abs(Z_1 * Z_2) * e**3)
+# print("Lambda test value: %3.3e" % Lambda_test)
 
 t_defl = (m_1**2 * v_1**3) / (8 * np.pi * Z_1**2 * Z_2**2 * e**4 * n_2 * np.log(Lambda)) # s
 
@@ -56,7 +60,7 @@ print("Distance", d_pc, "pc")
 
 #---------
 # CHECK THIS CALCULATION
-# mfp = (k * T) / (np.sqrt(2) * np.pi * d**2 * p) # mean free path (assuming ideal gas and kinetic theory)
+# mfp = (m_1**2 * v_1**4) / (8 * np.pi * Z_1**2 * Z_2**2 * e**4 * n_2 * np.log(Lambda)) # cm (mean free path based on deflection time)
 
 # print("Mean free path is %3.3e cm" % mfp)
 # mfp_pc = mfp / 3.0857e18
