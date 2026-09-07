@@ -1,11 +1,11 @@
 # short file to compute the deflection time for an electron in a plasma at a given temperature and redshift
 import numpy as np
 
-m_1 = 9.1093897e-28 # grams
+m_1 = 9.1093897e-28 # grams (mass of electron)
 
 e = 4.8032e-10 # esu (erg^1/2 cm^1/2)
 
-k = 1.380658e-16 # erg/K
+k = 1.380658e-16 # Boltzmann constant (erg/K)
 
 T = 1e5 # K (is this the temparature that we want to use (from Pop II.1 MS temperature)? Higher T would give longer t_defl)
 
@@ -15,6 +15,7 @@ Z_2 = 1 # proton charge
 
 z = 20 # redshift
 
+# CHECK THIS VALUE
 Psi = 2.70118 # value from original problem: 1.655
 
 
@@ -47,8 +48,16 @@ print("Deflection time is %3.3e yr" % t_defl_yr)
 
 
 #---------
-# distance over which the region stretchs
+# distance over which the region stretchs (assuming sharp cuttoff)
 d = v_1 * t_defl
 #print("Distance", d, "cm")
 d_pc = d / 3.0857e18
 print("Distance", d_pc, "pc")
+
+#---------
+# CHECK THIS CALCULATION
+# mfp = (k * T) / (np.sqrt(2) * np.pi * d**2 * p) # mean free path (assuming ideal gas and kinetic theory)
+
+# print("Mean free path is %3.3e cm" % mfp)
+# mfp_pc = mfp / 3.0857e18
+# print("Mean free path is %3.3e pc" % mfp_pc)
