@@ -24,12 +24,12 @@ KE = Psi * k * T # kinetic energy of the electron
 
 v_1 = np.sqrt(2 * KE / m_1) # cm/s (note: this is the computation from the exam problem)
 print("Electron velocity: %2.3e cm/s" % v_1)
-print("Electron velocity: %2.3e km/s" % (v_1 / 1e5))
+#print("Electron velocity: %2.3e km/s" % (v_1 / 1e5))
 
 
 #---------
 n_0 = 5.17e-3 / (1 + 30)**3  # based on z=30 numbers
-print("H number density now: %2.3e cm^-3" % n_0)
+#print("H number density now: %2.3e cm^-3" % n_0)
 
 n_2 = n_0 * (1 + z)**3 # cm^-3 (H number density at redshift z=20)
 print("H number density at z=20: %2.3e cm^-3" % n_2)
@@ -59,9 +59,12 @@ d_pc = d / 3.0857e18
 print("Distance", d_pc, "pc")
 
 #---------
-# CHECK THIS CALCULATION
-# mfp = (m_1**2 * v_1**4) / (8 * np.pi * Z_1**2 * Z_2**2 * e**4 * n_2 * np.log(Lambda)) # cm (mean free path based on deflection time)
+# get the mean free path of ionizing photons at z=20
+mfp = 3.4e17 * (1/n_2)
+mfp_pc = mfp / 3.0857e18
+print("Mean free path is %3.3e pc" % mfp_pc)
 
-# print("Mean free path is %3.3e cm" % mfp)
-# mfp_pc = mfp / 3.0857e18
-# print("Mean free path is %3.3e pc" % mfp_pc)
+#---------
+# determine the total distance over which the ionization front can travel
+d_total = d_pc + mfp_pc
+print("Total distance over which the ionization front can travel is %3.3e pc" % d_total)
