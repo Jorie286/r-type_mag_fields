@@ -3,9 +3,11 @@ import numpy as np
 
 m_1 = 9.1093897e-28 # grams (mass of electron)
 
-e = 4.8032e-10 # esu (erg^1/2 cm^1/2)
+e = 4.8032e-10 # esu (cm^3/2 g^1/2 s^-1) (electron charge)
 
 k = 1.380658e-16 # Boltzmann constant (erg/K)
+
+mu_0 = 1 # unitless in cgs units (4 * np.pi * 1e-7 in SI units)
 
 T = 1e5 # K (is this the temparature that we want to use (from Pop II.1 MS temperature)? Higher T would give longer t_defl)
 
@@ -68,3 +70,13 @@ print("Mean free path is %3.3e pc" % mfp_pc)
 # determine the total distance over which the ionization front can travel
 d_total = d_pc + mfp_pc
 print("Total distance over which the ionization front can travel is %3.3e pc" % d_total)
+
+#---------
+#CHECK THESE VALUES
+J = n_e * e * v_1 # currrent density (cm^-1/2 g^1/2 s^-2)
+#get the magnitude of the magnetic field generated at z=20
+curl_B = mu_0 * J # Gauss/cm
+print("Curl of B at z=20: %3.3e G/cm" % curl_B)
+
+B = (4 * np.pi * n_2 * m_1 * v_1**2)**0.5 # Gauss
+print("Magnetic field magnitude at z=20: %3.3e G" % B)
