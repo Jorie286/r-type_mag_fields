@@ -25,9 +25,11 @@ Psi = 2.70118 # value from original problem: 1.655
 KE = Psi * k * T # kinetic energy of the electron
 
 v_1 = np.sqrt(2 * KE / m_1) # cm/s (note: this is the computation from the exam problem)
-print("Electron velocity: %2.3e cm/s" % v_1)
+print(r"Electron velocity in r: %2.3e cm/s" % v_1)
 #print("Electron velocity: %2.3e km/s" % (v_1 / 1e5))
 
+# theta hat velocity
+v_t = 1e5 # cm/s (10 km/s)
 
 #---------
 n_0 = 5.17e-3 / (1 + 30)**3  # based on z=30 numbers
@@ -73,10 +75,19 @@ print("Total distance over which the ionization front can travel is %3.3e pc" % 
 
 #---------
 #CHECK THESE VALUES
-J = n_e * e * v_1 # currrent density (cm^-1/2 g^1/2 s^-2)
-#get the magnitude of the magnetic field generated at z=20
-curl_B = mu_0 * J # Gauss/cm
-print("Curl of B at z=20: %3.3e G/cm" % curl_B)
+J_r = n_e * e * v_1 # currrent density in r (cm^-1/2 g^1/2 s^-2)
+print("Current density in r", J_r)
 
-B = (4 * np.pi * n_2 * m_1 * v_1**2)**0.5 # Gauss
-print("Magnetic field magnitude at z=20: %3.3e G" % B)
+J_t = n_e * e * v_t # current density in theta (cm^-1/2 g^1/2 s^-2)
+print("Current density in theta", J_t)
+
+#get the magnitude of the magnetic field generated at z=20
+# curl_B = mu_0 * J # Gauss/cm
+# print("Curl of B at z=20: %3.3e G/cm" % curl_B)
+
+# B = (4 * np.pi * n_2 * m_1 * v_1**2)**0.5 # Gauss
+# print("Magnetic field magnitude at z=20: %3.3e G" % B)
+
+print("Mean free path to deflection length", mfp_pc/d_pc)
+
+print(50e-6 / (mfp_pc/d_pc))
