@@ -31,6 +31,8 @@ print(r"Electron velocity in r: %2.3e cm/s" % v_1)
 # theta hat velocity
 v_t = 1e5 # cm/s (10 km/s)
 
+# assume no phi hat velocity?
+
 #---------
 n_0 = 5.17e-3 / (1 + 30)**3  # based on z=30 numbers
 #print("H number density now: %2.3e cm^-3" % n_0)
@@ -42,12 +44,10 @@ n_e = n_2 # cm^-3 (assuming fully ionized hydrogen)
 
 
 #---------
-# calculating the values for t_defl
+# calculating the values for t_defl (does not depend on theta hat velocity)
 # Lambda = ((k**3 * T**3)/(np.pi * n_e ))**0.5 * (3/(2*np.abs(Z_1 * Z_2) * e**3)) # approx bmax / bmin
-# print("Lambda value: %3.3e" % Lambda)
 
 Lambda = ((k * T)/(np.pi * n_e))**0.5 * ((m_1 * v_1**2) / 2) * 1/(np.abs(Z_1 * Z_2) * e**3)
-# print("Lambda test value: %3.3e" % Lambda_test)
 
 t_defl = (m_1**2 * v_1**3) / (8 * np.pi * Z_1**2 * Z_2**2 * e**4 * n_2 * np.log(Lambda)) # s
 
@@ -73,6 +73,8 @@ print("Mean free path is %3.3e pc" % mfp_pc)
 d_total = d_pc + mfp_pc
 print("Total distance over which the ionization front can travel is %3.3e pc" % d_total)
 
+print("Mean free path to deflection length", mfp_pc/d_pc)
+
 #---------
 #CHECK THESE VALUES
 J_r = n_e * e * v_1 # currrent density in r (cm^-1/2 g^1/2 s^-2)
@@ -81,13 +83,27 @@ print("Current density in r", J_r)
 J_t = n_e * e * v_t # current density in theta (cm^-1/2 g^1/2 s^-2)
 print("Current density in theta", J_t)
 
+# get the ratio of the mean free path to the deflection length (dilution of current density)
+f = mfp_pc / d_pc
+print("Mean free path to deflection length", f)
+
 #get the magnitude of the magnetic field generated at z=20
+R = 1e11 # cm (arbitrary choice for the size of the region that the star occupies)
+r = R+1 # cm (distance from the current to the point where we are measuring the magnetic field)
+n_o = n_e * (r/R)**2 # get the number density of electrons at the chosen radius
+f_ion = 0.5 # fraction of ionized hydrogen
+
+B = ((R**2)/r) * n_o * f_ion * e * v_t * np.log(R/r) # magnetic field in the phi direction (Gauss)
+print("Magnetic field magnitude at z=20 when R=r: %3.3e G" % np.abs(B))
+print("Magnetic field magnitude at z=20 with dilution: %3.3e G" % np.abs(B / f))
+
 # curl_B = mu_0 * J # Gauss/cm
 # print("Curl of B at z=20: %3.3e G/cm" % curl_B)
 
 # B = (4 * np.pi * n_2 * m_1 * v_1**2)**0.5 # Gauss
 # print("Magnetic field magnitude at z=20: %3.3e G" % B)
 
-print("Mean free path to deflection length", mfp_pc/d_pc)
-
-print(50e-6 / (mfp_pc/d_pc))
+# find the magnetic field magnitude that was generated at z=20 and is now at z=0
+z0 = 0 # redshift now
+B_z0 = (B / f) * ((1 + z)/(1 + z0))**-2 # Gauss
+print("Magnetic field magnitude at z=0 with dilution: %3.3e G" % np.abs(B_z0))
