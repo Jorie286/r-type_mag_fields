@@ -17,6 +17,8 @@ Z_2 = 1 # proton charge
 
 z = 20 # redshift
 
+c = 3e10 # cm/s
+
 # CHECK THIS VALUE
 Psi = 2.70118 # value from original problem: 1.655
 
@@ -91,8 +93,10 @@ print("Mean free path to deflection length", f)
 # R = 1e11 # cm (arbitrary choice for the size of the region that the star occupies)
 # n_o = n_e * (r/R)**2 # get the number density of electrons at the chosen radius
 
-r = 0.1 * 1e6 * 3.086e18  # cm (10% of 1 comoving Mpc in cm, rough size of overdensity at z=20)
-r_1 = 0.65 * 1e3* 3.086e18 # cm (60% of a comoving kpc, size of a smaller overdensity at z=20)
+R = 1e6 * 3.086e18 * (1/(1+z)) # cm (10% of 1 comoving Mpc in cm, rough size of overdensity at z=20)
+r=R+1 # location to measure the field
+R_1 = 1e3* 3.086e18 * (1/(1+z)) # cm (60% of a comoving kpc, size of a smaller overdensity at z=20)
+r_1=R_1+1 # location to measure the field
 f_ion = 0.5 # fraction of ionized hydrogen
 
 # B = ((R**2)/r) * n_o * f_ion * e * v_t * np.log(R/r) # magnetic field in the phi direction (Gauss)
@@ -105,13 +109,17 @@ f_ion = 0.5 # fraction of ionized hydrogen
 # B = (4 * np.pi * n_2 * m_1 * v_1**2)**0.5 # Gauss
 # print("Magnetic field magnitude at z=20: %3.3e G" % B)
 
+print("For B field over volume:")
+
+# CHECK THESE NUMBERS, USE d_total INSTEAD??
+
 # magnetic field based on biot-savart law using constant current density and a spherical region of radius r
-B = (4 * np.pi * J_r * f_ion * r) / (3 * 3e10) # Gauss
+B = (4 * np.pi * J_r * f_ion * 1.1 * R**3) / (3 * c * r**2) # Gauss
 B_diluted = B / f # Gauss
 print("Magnetic field magnitude at z=20 using comoving Mpc: %3.3e G" % np.abs(B))
 print("Magnetic field magnitude at z=20 with dilution using comoving Mpc: %3.3e G" % np.abs(B_diluted))
 
-B_1 = (4 * np.pi * J_r * f_ion * r_1) / (3 * 3e10) # Gauss
+B_1 = (4 * np.pi * J_r * f_ion * 1.1 * R_1**3) / (3 * c * r_1**2) # Gauss
 B_diluted_1 = B_1 / f # Gauss
 print("Magnetic field magnitude at z=20 using comoving kpc: %3.3e G" % np.abs(B_1))
 print("Magnetic field magnitude at z=20 with dilution using comoving kpc: %3.3e G" % np.abs(B_diluted_1))
@@ -123,3 +131,29 @@ print("Magnetic field magnitude at z=0 with dilution for comoving Mpc: %3.3e G" 
 
 B_z0_1 = (B_diluted_1) * ((1 + z)/(1 + z0))**-2 # Gauss
 print("Magnetic field magnitude at z=0 with dilution for comoving kpc: %3.3e G" % np.abs(B_z0_1))
+
+
+print("\nFor B field in 'wire':")
+
+total_current = J_r * 1.1 * (np.pi * R**2) # with 0.1 overdensity in current
+
+# magnetic field based on biot-savart law using constant current density and a spherical region of radius r
+B_magnitude = (2 * total_current) / (c * r) # Gauss
+B_diluted_magnitude = B_magnitude / f # Gauss
+print("Magnetic field magnitude at z=20 using comoving Mpc wire: %3.3e G" % np.abs(B_magnitude))
+print("Magnetic field magnitude at z=20 with dilution using comoving Mpc wire: %3.3e G" % np.abs(B_diluted_magnitude))
+
+total_current_1 = J_r * 1.1 * (np.pi * R_1**2) # with 0.1 overdensity in current
+
+B_1_magnitude = (2 * total_current_1) / (c * r_1) # Gauss
+B_diluted_1_magnitude = B_1_magnitude / f # Gauss
+print("Magnetic field magnitude at z=20 using comoving kpc wire: %3.3e G" % np.abs(B_1_magnitude))
+print("Magnetic field magnitude at z=20 with dilution using comoving kpc wire: %3.3e G" % np.abs(B_diluted_1_magnitude))
+
+# find the magnetic field magnitude that was generated at z=20 and is now at z=0
+z0 = 0 # redshift now
+B_z0_magnitude = (B_diluted_magnitude) * ((1 + z)/(1 + z0))**-2 # Gauss
+print("Magnetic field magnitude at z=0 with dilution for comoving Mpc wire: %3.3e G" % np.abs(B_z0_magnitude))
+
+B_z0_1_magnitude = (B_diluted_1_magnitude) * ((1 + z)/(1 + z0))**-2 # Gauss
+print("Magnetic field magnitude at z=0 with dilution for comoving kpc wire: %3.3e G" % np.abs(B_z0_1_magnitude))
