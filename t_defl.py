@@ -109,51 +109,88 @@ f_ion = 0.5 # fraction of ionized hydrogen
 # B = (4 * np.pi * n_2 * m_1 * v_1**2)**0.5 # Gauss
 # print("Magnetic field magnitude at z=20: %3.3e G" % B)
 
-print("For B field over volume:")
+print("\nFor B field over volume:")
 
-# CHECK THESE NUMBERS, USE d_total INSTEAD??
+# CHECK THESE NUMBERS
 
 # magnetic field based on biot-savart law using constant current density and a spherical region of radius r
-B = (4 * np.pi * J_r * f_ion * 1.1 * R**3) / (3 * c * r**2) # Gauss
-B_diluted = B / f # Gauss
-print("Magnetic field magnitude at z=20 using comoving Mpc: %3.3e G" % np.abs(B))
-print("Magnetic field magnitude at z=20 with dilution using comoving Mpc: %3.3e G" % np.abs(B_diluted))
+# B = (4 * np.pi * J_r * f_ion * 1.1 * R**3) / (3 * c * r**2) # Gauss
+# B_diluted = B / f # Gauss
 
-B_1 = (4 * np.pi * J_r * f_ion * 1.1 * R_1**3) / (3 * c * r_1**2) # Gauss
-B_diluted_1 = B_1 / f # Gauss
-print("Magnetic field magnitude at z=20 using comoving kpc: %3.3e G" % np.abs(B_1))
-print("Magnetic field magnitude at z=20 with dilution using comoving kpc: %3.3e G" % np.abs(B_diluted_1))
+B_d = (4 * np.pi * J_r * f_ion * 1.1 * d_total**3) / (3 * c * f * (1)**2) # Gauss
+# print("Magnetic field magnitude at z=20 using comoving Mpc: %3.3e G" % np.abs(B))
+# print("Magnetic field magnitude at z=20 with dilution using comoving Mpc: %3.3e G" % np.abs(B_diluted))
+print("Magnetic field magnitude at z=20 with dilution using d_total = mfp + d_tdefl: %3.3e G" % np.abs(B_d))
+
+# B_1 = (4 * np.pi * J_r * f_ion * 1.1 * R_1**3) / (3 * c * r_1**2) # Gauss
+# B_diluted_1 = B_1 / f # Gauss
+
+# print("Magnetic field magnitude at z=20 using comoving kpc: %3.3e G" % np.abs(B_1))
+# print("Magnetic field magnitude at z=20 with dilution using comoving kpc: %3.3e G" % np.abs(B_diluted_1))
 
 # find the magnetic field magnitude that was generated at z=20 and is now at z=0
 z0 = 0 # redshift now
-B_z0 = (B_diluted) * ((1 + z)/(1 + z0))**-2 # Gauss
-print("Magnetic field magnitude at z=0 with dilution for comoving Mpc: %3.3e G" % np.abs(B_z0))
+# B_z0 = (B_diluted) * ((1 + z)/(1 + z0))**-2 # Gauss
+# print("Magnetic field magnitude at z=0 with dilution for comoving Mpc: %3.3e G" % np.abs(B_z0))
 
-B_z0_1 = (B_diluted_1) * ((1 + z)/(1 + z0))**-2 # Gauss
-print("Magnetic field magnitude at z=0 with dilution for comoving kpc: %3.3e G" % np.abs(B_z0_1))
+# B_z0_1 = (B_diluted_1) * ((1 + z)/(1 + z0))**-2 # Gauss
+# print("Magnetic field magnitude at z=0 with dilution for comoving kpc: %3.3e G" % np.abs(B_z0_1))
+
+B_z0_d = (B_d) * ((1 + z)/(1 + z0))**-2 # Gauss
+print("Magnetic field magnitude at z=0 with dilution for d_total = mfp + d_tdefl: %3.3e G" % np.abs(B_z0_d))
 
 
 print("\nFor B field in 'wire':")
 
-total_current = J_r * 1.1 * (np.pi * R**2) # with 0.1 overdensity in current
+# total_current = J_r * 1.1 * 0.5 * (np.pi * R**2) # with 0.1 overdensity in current
 
 # magnetic field based on biot-savart law using constant current density and a spherical region of radius r
-B_magnitude = (2 * total_current) / (c * r) # Gauss
-B_diluted_magnitude = B_magnitude / f # Gauss
-print("Magnetic field magnitude at z=20 using comoving Mpc wire: %3.3e G" % np.abs(B_magnitude))
-print("Magnetic field magnitude at z=20 with dilution using comoving Mpc wire: %3.3e G" % np.abs(B_diluted_magnitude))
+# B_magnitude = (2 * total_current) / (c * r) # Gauss
+# B_diluted_magnitude = B_magnitude / f # Gauss
+# print("Magnetic field magnitude at z=20 using comoving Mpc wire: %3.3e G" % np.abs(B_magnitude))
+# print("Magnetic field magnitude at z=20 with dilution using comoving Mpc wire: %3.3e G" % np.abs(B_diluted_magnitude))
 
-total_current_1 = J_r * 1.1 * (np.pi * R_1**2) # with 0.1 overdensity in current
+# total_current_1 = J_r * 1.1 * 0.5 * (np.pi * R_1**2) # with 0.1 overdensity in current
 
-B_1_magnitude = (2 * total_current_1) / (c * r_1) # Gauss
-B_diluted_1_magnitude = B_1_magnitude / f # Gauss
-print("Magnetic field magnitude at z=20 using comoving kpc wire: %3.3e G" % np.abs(B_1_magnitude))
-print("Magnetic field magnitude at z=20 with dilution using comoving kpc wire: %3.3e G" % np.abs(B_diluted_1_magnitude))
+# B_1_magnitude = (2 * total_current_1) / (c * r_1) # Gauss
+# B_diluted_1_magnitude = B_1_magnitude / f # Gauss
+# print("Magnetic field magnitude at z=20 using comoving kpc wire: %3.3e G" % np.abs(B_1_magnitude))
+# print("Magnetic field magnitude at z=20 with dilution using comoving kpc wire: %3.3e G" % np.abs(B_diluted_1_magnitude))
+
+total_current_d = J_r * 1.1 * 0.5 * (np.pi * d_total**2) # with 0.1 overdensity in current
+B_diluted_d_magnitude = (2 * total_current_d) / (c * (1) * f) # Gauss
+print("Magnetic field magnitude at z=20 with dilution using d_total = mfp + d_tdefl wire: %3.3e G" % np.abs(B_diluted_d_magnitude))
 
 # find the magnetic field magnitude that was generated at z=20 and is now at z=0
-z0 = 0 # redshift now
-B_z0_magnitude = (B_diluted_magnitude) * ((1 + z)/(1 + z0))**-2 # Gauss
-print("Magnetic field magnitude at z=0 with dilution for comoving Mpc wire: %3.3e G" % np.abs(B_z0_magnitude))
+# z0 = 0 # redshift now
+# B_z0_magnitude = (B_diluted_magnitude) * ((1 + z)/(1 + z0))**-2 # Gauss
+# print("Magnetic field magnitude at z=0 with dilution for comoving Mpc wire: %3.3e G" % np.abs(B_z0_magnitude))
 
-B_z0_1_magnitude = (B_diluted_1_magnitude) * ((1 + z)/(1 + z0))**-2 # Gauss
-print("Magnetic field magnitude at z=0 with dilution for comoving kpc wire: %3.3e G" % np.abs(B_z0_1_magnitude))
+# B_z0_1_magnitude = (B_diluted_1_magnitude) * ((1 + z)/(1 + z0))**-2 # Gauss
+# print("Magnetic field magnitude at z=0 with dilution for comoving kpc wire: %3.3e G" % np.abs(B_z0_1_magnitude))
+
+B_z0_d_magnitude = (B_diluted_d_magnitude) * ((1 + z)/(1 + z0))**-2 # Gauss
+print("Magnetic field magnitude at z=0 with dilution for d_total = mfp + d_tdefl wire: %3.3e G" % np.abs(B_z0_d_magnitude))
+
+
+# -------------
+# approximate the ionization front velocity and find the fraction of the field that will be locked into the background
+
+v_ion = J_r / (e * n_2) #cm/s
+print("Rough estimate of the ionization front velocity: %3.3e cm/s" % v_ion)
+
+f_transverse = v_t / v_ion # fraction of the field that will be transverse in front crossing time
+print("f transverse", f_transverse)
+
+B_lock_vol = B_d * f_transverse # fraction of the field that is locked in
+print("Magnitude of field that is twisted for a volume: %3.3e G" % B_lock_vol)
+
+B_lock_wire = B_diluted_d_magnitude * f_transverse # fraction of the field that is locked in
+print("Magnitude of field that is twisted for a wire: %3.3e G" % B_lock_wire)
+
+B_z0_wire = (B_lock_wire) * ((1 + z)/(1 + z0))**-2 # Gauss
+print("Magnitude of twisted field today without amplification: %3.3e G" % B_z0_wire)
+
+
+
+
