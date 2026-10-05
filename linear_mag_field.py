@@ -93,10 +93,10 @@ print("Mean free path to deflection length", f)
 # R = 1e11 # cm (arbitrary choice for the size of the region that the star occupies)
 # n_o = n_e * (r/R)**2 # get the number density of electrons at the chosen radius
 
-R = 1e6 * 3.086e18 * (1/(1+z)) # cm (10% of 1 comoving Mpc in cm, rough size of overdensity at z=20)
-r=R+1 # location to measure the field
-R_1 = 1e3* 3.086e18 * (1/(1+z)) # cm (60% of a comoving kpc, size of a smaller overdensity at z=20)
-r_1=R_1+1 # location to measure the field
+# R = 1e6 * 3.086e18 * (1/(1+z)) # cm (10% of 1 comoving Mpc in cm, rough size of overdensity at z=20)
+# r=R+1 # location to measure the field
+# R_1 = 1e3* 3.086e18 * (1/(1+z)) # cm (60% of a comoving kpc, size of a smaller overdensity at z=20)
+# r_1=R_1+1 # location to measure the field
 f_ion = 0.5 # fraction of ionized hydrogen
 
 # B = ((R**2)/r) * n_o * f_ion * e * v_t * np.log(R/r) # magnetic field in the phi direction (Gauss)
@@ -118,8 +118,10 @@ print("\nFor B field over volume:")
 # B_diluted = B / f # Gauss
 
 B_d = (4 * np.pi * J_r * f_ion * 1.1 * d_total**3) / (3 * c * f * (1)**2) # Gauss
+B_d_n = (4 * np.pi * J_r * 1.1 * d_total**3) / (3 * c * (1)**2) # Gauss
 # print("Magnetic field magnitude at z=20 using comoving Mpc: %3.3e G" % np.abs(B))
 # print("Magnetic field magnitude at z=20 with dilution using comoving Mpc: %3.3e G" % np.abs(B_diluted))
+print("Magnetic field magnitude at z=20 without dilution using d_total = mfp + d_tdefl: %3.3e G" % np.abs(B_d_n))
 print("Magnetic field magnitude at z=20 with dilution using d_total = mfp + d_tdefl: %3.3e G" % np.abs(B_d))
 
 # B_1 = (4 * np.pi * J_r * f_ion * 1.1 * R_1**3) / (3 * c * r_1**2) # Gauss
@@ -159,6 +161,9 @@ print("\nFor B field in 'wire':")
 
 total_current_d = J_r * 1.1 * 0.5 * (np.pi * d_total**2) # with 0.1 overdensity in current
 B_diluted_d_magnitude = (2 * total_current_d) / (c * (1) * f) # Gauss
+total_current_d_n = J_r * 1.1 * (np.pi * d_total**2) # with 0.1 overdensity in current
+B_diluted_d_magnitude_n = (2 * total_current_d) / (c * (1)) # Gauss
+print("Magnetic field magnitude at z=20 without dilution using d_total = mfp + d_tdefl wire: %3.3e G" % np.abs(B_diluted_d_magnitude_n))
 print("Magnetic field magnitude at z=20 with dilution using d_total = mfp + d_tdefl wire: %3.3e G" % np.abs(B_diluted_d_magnitude))
 
 # find the magnetic field magnitude that was generated at z=20 and is now at z=0
