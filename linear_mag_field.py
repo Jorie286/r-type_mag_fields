@@ -9,7 +9,7 @@ k = 1.380658e-16 # Boltzmann constant (erg/K)
 
 mu_0 = 1 # unitless in cgs units (4 * np.pi * 1e-7 in SI units)
 
-T = 1e5 # K (is this the temparature that we want to use (from Pop II.1 MS temperature)? Higher T would give longer t_defl)
+T = 1e5 # K (is this the temparature that we want to use (from Pop III.1 MS temperature)? Higher T would give longer t_defl)
 
 Z_1 = -1 # electron charge
 
@@ -31,7 +31,7 @@ print(r"Electron velocity in r: %2.3e cm/s" % v_1)
 #print("Electron velocity: %2.3e km/s" % (v_1 / 1e5))
 
 # theta hat velocity
-v_t = 1e5 # cm/s (10 km/s)
+v_t = 1e6 # cm/s (10 km/s)
 
 # assume no phi hat velocity?
 
@@ -160,9 +160,9 @@ print("\nFor B field in 'wire':")
 # print("Magnetic field magnitude at z=20 with dilution using comoving kpc wire: %3.3e G" % np.abs(B_diluted_1_magnitude))
 
 total_current_d = J_r * 1.1 * 0.5 * (np.pi * d_total**2) # with 0.1 overdensity in current
-B_diluted_d_magnitude = (2 * total_current_d) / (c * (1) * f) # Gauss
+B_diluted_d_magnitude = (2 * total_current_d) / (c * (1e-1) * f) # Gauss
 total_current_d_n = J_r * 1.1 * (np.pi * d_total**2) # with 0.1 overdensity in current
-B_diluted_d_magnitude_n = (2 * total_current_d) / (c * (1)) # Gauss
+B_diluted_d_magnitude_n = (2 * total_current_d) / (c * (1e-1)) # Gauss
 print("Magnetic field magnitude at z=20 without dilution using d_total = mfp + d_tdefl wire: %3.3e G" % np.abs(B_diluted_d_magnitude_n))
 print("Magnetic field magnitude at z=20 with dilution using d_total = mfp + d_tdefl wire: %3.3e G" % np.abs(B_diluted_d_magnitude))
 
@@ -181,10 +181,15 @@ print("Magnetic field magnitude at z=0 with dilution for d_total = mfp + d_tdefl
 # -------------
 # approximate the ionization front velocity and find the fraction of the field that will be locked into the background
 
+v_i = 1e53/(4 * np.pi * n_2 * (1e6 * 3.8e18 / (1 + z))**2)
+print(v_i)
+
 v_ion = J_r / (e * n_2) #cm/s
 print("Rough estimate of the ionization front velocity: %3.3e cm/s" % v_ion)
 
-f_transverse = v_t / v_ion # fraction of the field that will be transverse in front crossing time
+v_ionization = 2000*1e5 #km/s
+
+f_transverse = v_t / v_ionization # fraction of the field that will be transverse in front crossing time
 print("f transverse", f_transverse)
 
 B_lock_vol = B_d * f_transverse # fraction of the field that is locked in
@@ -195,7 +200,3 @@ print("Magnitude of field that is twisted for a wire: %3.3e G" % B_lock_wire)
 
 B_z0_wire = (B_lock_wire) * ((1 + z)/(1 + z0))**-2 # Gauss
 print("Magnitude of twisted field today without amplification: %3.3e G" % B_z0_wire)
-
-
-
-
