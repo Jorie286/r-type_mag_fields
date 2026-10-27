@@ -59,15 +59,15 @@ print("Deflection time is %3.3e yr" % t_defl_yr)
 
 #---------
 # distance over which the region stretchs (assuming sharp cuttoff)
-d = v_1 * t_defl
+d = v_1 * t_defl # cm
 #print("Distance", d, "cm")
-d_pc = d / 3.0857e18
+d_pc = d / 3.0857e18 # convert to pc
 print("Distance", d_pc, "pc")
 
 #---------
 # get the mean free path of ionizing photons at z=20
-mfp = 3.4e17 * (1/n_2)
-mfp_pc = mfp / 3.0857e18
+mfp = 3.4e17 * (1/n_2) # cm
+mfp_pc = mfp / 3.0857e18 # convert to pc
 print("Mean free path is %3.3e pc" % mfp_pc)
 
 #---------
@@ -77,18 +77,20 @@ print("Total distance over which the ionization front can travel is %3.3e pc" % 
 
 print("Mean free path to deflection length", mfp_pc/d_pc)
 
+# get the ratio of the mean free path to the deflection length (dilution of current density)
+f = mfp_pc / d_pc
+
 #---------
 #CHECK THESE VALUES
 J_r = n_e * e * v_1 # currrent density in r (cm^-1/2 g^1/2 s^-2)
-print("Current density in r", J_r)
+print("\nCurrent density in r", J_r)
 
 J_t = n_e * e * v_t # current density in theta (cm^-1/2 g^1/2 s^-2)
 print("Current density in theta", J_t)
 
-# get the ratio of the mean free path to the deflection length (dilution of current density)
-f = mfp_pc / d_pc
-print("Mean free path to deflection length", f)
 
+
+#---------------
 #get the magnitude of the magnetic field generated at z=20
 # R = 1e11 # cm (arbitrary choice for the size of the region that the star occupies)
 # n_o = n_e * (r/R)**2 # get the number density of electrons at the chosen radius
@@ -182,7 +184,7 @@ print("Magnetic field magnitude at z=0 with dilution for d_total = mfp + d_tdefl
 # approximate the ionization front velocity and find the fraction of the field that will be locked into the background
 
 v_i = 1e53/(4 * np.pi * n_2 * (1e6 * 3.8e18 / (1 + z))**2)
-print(v_i)
+print("\nIonization front velocity: %3.3e cm/s" % v_i)
 
 v_ion = J_r / (e * n_2) #cm/s
 print("Rough estimate of the ionization front velocity: %3.3e cm/s" % v_ion)
@@ -190,7 +192,7 @@ print("Rough estimate of the ionization front velocity: %3.3e cm/s" % v_ion)
 v_ionization = 2000*1e5 #km/s
 
 f_transverse = v_t / v_ionization # fraction of the field that will be transverse in front crossing time
-print("f transverse", f_transverse)
+print("\nf transverse", f_transverse)
 
 B_lock_vol = B_d * f_transverse # fraction of the field that is locked in
 print("Magnitude of field that is twisted for a volume: %3.3e G" % B_lock_vol)
@@ -200,3 +202,13 @@ print("Magnitude of field that is twisted for a wire: %3.3e G" % B_lock_wire)
 
 B_z0_wire = (B_lock_wire) * ((1 + z)/(1 + z0))**-2 # Gauss
 print("Magnitude of twisted field today without amplification: %3.3e G" % B_z0_wire)
+
+#---------------
+#get the small scale eddy circulation time
+t_eddy = (0.01 * d_total * 3.0857e18) / v_t # cm
+print("Small scale eddy circulation time: %3.3e yr" % (t_eddy * (1/(np.pi * 1e7))))
+
+#---------------
+# get the magnitude of the electric field in the IGM at z=20
+E = J_r / ((n_e * e**2 * t_defl)/m_1) # Gauss (CHECK THIS EQUATION)
+print("\nElectric field magnitude at z=20: %3.3e G" % np.abs(E))
