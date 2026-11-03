@@ -222,24 +222,22 @@ print("Small scale eddy circulation time: %3.3e yr" % (t_eddy * (1/(np.pi * 1e7)
 # --------------
 # get the electric field for a sphere filled with protons
 N_sphere = (4/3) * np.pi * (0.1 * 3.0857e18)**3 * n_2 # number of protons in the sphere
-E_sphere = N_sphere * e / (0.1 * 3.0857e18)**2 # Gauss
+E_sphere = N_sphere * e / (0.1 * 3.0857e18)**2 # esu/cm^2
 print("\nElectric field from a sphere of 0.1 pc radius filled with protons is: %3.3e esu/cm^2" % E_sphere)
 
 # get the timescale for electron drift back given that every ionized electron will create a dipole and electric field
-t_drift_sphere = (m_1 * v_th) / (e * E_sphere) # s (use thermal velocity for the electron?)
+t_drift_sphere = np.sqrt((2 * m_1 * 0.1 * 3.0857e18) / (e * E_sphere)) # s (use thermal velocity for the electron?)
 print("Timescale for electron drift back from a sphere of 0.1 pc radius filled with protons is: %3.3e s" % t_drift_sphere)
 
 
 # get the electric field for a 1 cMpc shell filled with protons
 N_shell = (((4/3) * np.pi * ((50e3+0.1) * 3.0857e18)**3) - ((4/3) * np.pi * (50e3 * 3.0857e18)**3)) * n_2 # number of protons in the shell
-E_shell = N_shell * e / ((50e3+0.1) * 3.0857e18)**2 # Gauss
+E_shell = N_shell * e / ((50e3+0.1) * 3.0857e18)**2 # esu/cm^2
 print("Electric field from a 1 cMpc shell filled with protons is: %3.3e esu/cm^2" % E_shell)
 
 # get the timescale for electron drift back given that every ionized electron will create a dipole and electric field
-t_drift_shell = (m_1 * v_th) / (e * E_shell) # s (use thermal velocity for the electron?)
+t_drift_shell = np.sqrt((2 * m_1 * 0.1 * 3.0857e18) / (e * E_shell)) # s (use thermal velocity for the electron?)
 print("Timescale for electron drift back from a 1 cMpc shell filled with protons is: %3.3e s" % t_drift_shell)
-
-print(mfp/v_th)
 
 print(0.1 * 3.0857e18 / t_drift_shell)
 
