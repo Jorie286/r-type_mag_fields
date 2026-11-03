@@ -218,51 +218,57 @@ print("Magnitude of twisted field today without amplification: %3.3e G" % B_z0_w
 t_eddy = (0.01 * d_total * 3.0857e18) / v_t # cm
 print("Small scale eddy circulation time: %3.3e yr" % (t_eddy * (1/(np.pi * 1e7))))
 
-#---------------
-# get the magnitude of the electric field in the IGM at z=20
-E = J_r / ((n_e * e**2 * t_defl)/m_1) # Gauss (CHECK THIS EQUATION)
-print("\nElectric field magnitude at z=20: %3.3e G" % np.abs(E))
+
+# --------------
+# get the timescale for electron drift back given that every ionized electron will create a dipole and electric field
+d_mom = e * d # (esu cm) dipole moment
+E = (2*d_mom)/(d**3) # (esu/cm^2) get the electric field given that it is measured in the proton rest frame
+print("Electric field from the dipole is: %3.3e esu/cm^2" % E)
+
+v_d = (e * E * mfp_e)/(m_1 * v_th) # (cm/s) drift velocity for electrons given the dipole electric field
+print("Drift velocity of electrons from electric field is: %3.3e cm/s" % v_d)
+
 
 #---------------
 # get the timescale for electron restoration in the reionization front using random walk
 
-D_reg = (1/6) * mfp_e * v_th # cm^2 s^-1, diffusion coeffeicient
+# D_reg = (1/6) * mfp_e * v_th # cm^2 s^-1, diffusion coeffeicient
 
-t_reg = (d**2)/(2 * 3 * D_reg) # s, drifting/random walk timescale for electrons
+# t_reg = (d**2)/(2 * 3 * D_reg) # s, drifting/random walk timescale for electrons
 
-print("\nRandom walk timescale without magnetic field %3.3e s" % t_reg)
-
-#get average velocity of random walk
-v_rand_reg = d/t_reg # cm/s
-print("Velocity during random walk %3.3e cm/s" % v_rand_reg)
-
-J_reg = n_e * e * v_rand_reg # currrent density in r for drifting electrons (cm^-1/2 g^1/2 s^-2)
-print("Current density in r for drifting electrons", J_reg)
-
-# get the magnitude of the electric field in the IGM at z=20
-E_reg = J_reg / ((n_e * e**2 * t_reg)/m_1) # Gauss (CHECK THIS EQUATION)
-print("Electric field magnitude at z=20 for drifting electrons: %3.3e G" % np.abs(E_reg))
-
-
-
-B_max = 1.197e-09 # Gauss, undiulted wire mag field at z=20
-
-B_min = 4.801e-13 # Gauss, diluted mag field at z=20
-
-r_L = (m_1*v_1)/(e*B_min)# Larmor radius
-
-D_mag = (1/3) * (r_L**2) * (v_th/mfp_e) # cm^2 s^-1, diffusion coeffeicient
-
-t_mag = (d**2)/(2 * 3 * D_mag) # s, drifting/random walk timescale for electrons
-print("\nRandom walk timescale with magnetic field %3.3e s" % t_mag)
+# print("\nRandom walk timescale without magnetic field %3.3e s" % t_reg)
 
 #get average velocity of random walk
-v_rand_mag = d/t_mag # cm/s
-print("Velocity during random walk %3.3e cm/s" % v_rand_mag)
+# v_rand_reg = d/t_reg # cm/s
+# print("Velocity during random walk %3.3e cm/s" % v_rand_reg)
 
-J_mag = n_e * e * v_rand_mag # currrent density in r for drifting electrons (cm^-1/2 g^1/2 s^-2)
-print("Current density in r for drifting electrons with magnetic field", J_mag)
+# J_reg = n_e * e * v_rand_reg # currrent density in r for drifting electrons (cm^-1/2 g^1/2 s^-2)
+# print("Current density in r for drifting electrons", J_reg)
 
 # get the magnitude of the electric field in the IGM at z=20
-E_mag = J_mag / ((n_e * e**2 * t_mag)/m_1) # Gauss (CHECK THIS EQUATION)
-print("Electric field magnitude at z=20 for drifting electrons with magnetic field: %3.3e G" % np.abs(E_mag))
+# E_reg = J_reg / ((n_e * e**2 * t_reg)/m_1) # Gauss (CHECK THIS EQUATION)
+# print("Electric field magnitude at z=20 for drifting electrons: %3.3e G" % np.abs(E_reg))
+
+
+
+# B_max = 1.197e-09 # Gauss, undiulted wire mag field at z=20
+
+# B_min = 4.801e-13 # Gauss, diluted mag field at z=20
+
+# r_L = (m_1*v_1)/(e*B_min)# Larmor radius
+
+# D_mag = (1/3) * (r_L**2) * (v_th/mfp_e) # cm^2 s^-1, diffusion coeffeicient
+
+# t_mag = (d**2)/(2 * 3 * D_mag) # s, drifting/random walk timescale for electrons
+# print("\nRandom walk timescale with magnetic field %3.3e s" % t_mag)
+
+#get average velocity of random walk
+# v_rand_mag = d/t_mag # cm/s
+# print("Velocity during random walk %3.3e cm/s" % v_rand_mag)
+
+# J_mag = n_e * e * v_rand_mag # currrent density in r for drifting electrons (cm^-1/2 g^1/2 s^-2)
+# print("Current density in r for drifting electrons with magnetic field", J_mag)
+
+# get the magnitude of the electric field in the IGM at z=20
+# E_mag = J_mag / ((n_e * e**2 * t_mag)/m_1) # Gauss (CHECK THIS EQUATION)
+# print("Electric field magnitude at z=20 for drifting electrons with magnetic field: %3.3e G" % np.abs(E_mag))
