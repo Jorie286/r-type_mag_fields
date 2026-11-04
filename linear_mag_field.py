@@ -7,6 +7,8 @@ e = 4.8032e-10 # esu (cm^3/2 g^1/2 s^-1) (electron charge)
 
 k = 1.380658e-16 # Boltzmann constant (erg/K)
 
+k_c = 1 # Columb's constant (in cgs units)
+
 mu_0 = 1 # unitless in cgs units (4 * np.pi * 1e-7 in SI units)
 
 T = 1e5 # K (is this the temparature that we want to use (from Pop III.1 MS temperature)? Higher T would give longer t_defl)
@@ -218,6 +220,23 @@ print("Magnitude of twisted field today without amplification: %3.3e G" % B_z0_w
 t_eddy = (0.01 * d_total * 3.0857e18) / v_t # cm
 print("Small scale eddy circulation time: %3.3e yr" % (t_eddy * (1/(np.pi * 1e7))))
 
+# --------------
+# get separation of electrons from protons given extra energy of 3 eV (from photoionization)
+r = (k_c * e**2)/(5 * 1.602e-12) # cm
+print("\nSeparation of electrons from protons given extra energy of 5 eV (from photoionization): %3.3e cm" % r)
+
+# get the electric field for a sphere filled with protons
+N_sphere = (4/3) * np.pi * (r)**3 * n_2 # number of protons in the sphere
+E_sphere = N_sphere * e / (r)**2 # dyne/esu
+print("\nElectric field from a sphere filled with protons is: %3.3e esu/cm^2" % E_sphere)
+print("To SI units (N/C):", E_sphere*1e-5*(1/3)*1e-9)
+
+# get the timescale for electron drift back given that every ionized electron will create a dipole and electric field
+t_drift_sphere = np.sqrt((2 * m_1 * r) / (e * E_sphere)) # s (use thermal velocity for the electron?)
+print("Timescale for electron drift back from a sphere filled with protons is: %3.3e s" % t_drift_sphere)
+
+v_sphere = r/t_drift_sphere # cm/s
+print("Velocity of electron drift back from a sphere filled with protons is: %3.3e cm/s" % v_sphere)
 
 # --------------
 # get the electric field for a sphere filled with protons
@@ -226,10 +245,6 @@ E_sphere = N_sphere * e / (0.1 * 3.0857e18)**2 # dyne/esu
 print("\nElectric field from a sphere of 0.1 pc radius filled with protons is: %3.3e esu/cm^2" % E_sphere)
 print("To SI units (N/C):", E_sphere*1e-5*(1/3)*1e-9)
 
-# get the timescale for electron drift back given that every ionized electron will create a dipole and electric field
-t_drift_sphere = np.sqrt((2 * m_1 * 0.1 * 3.0857e18) / (e * E_sphere)) # s (use thermal velocity for the electron?)
-print("Timescale for electron drift back from a sphere of 0.1 pc radius filled with protons is: %3.3e s" % t_drift_sphere)
-
 
 # get the electric field for a 1 cMpc shell filled with protons
 N_shell = (((4/3) * np.pi * ((50e3+0.1) * 3.0857e18)**3) - ((4/3) * np.pi * (50e3 * 3.0857e18)**3)) * n_2 # number of protons in the shell
@@ -237,11 +252,60 @@ E_shell = N_shell * e / ((50e3+0.1) * 3.0857e18)**2 # dyne/esu
 print("Electric field from a 1 cMpc shell filled with protons is: %3.3e esu/cm^2" % E_shell)
 print("To SI units (N/C):", E_shell*1e-5*(1/3)*1e-9)
 
-# get the timescale for electron drift back given that every ionized electron will create a dipole and electric field
-t_drift_shell = np.sqrt((2 * m_1 * 0.1 * 3.0857e18) / (e * E_shell)) # s (use thermal velocity for the electron?)
-print("Timescale for electron drift back from a 1 cMpc shell filled with protons is: %3.3e s" % t_drift_shell)
 
-print(0.1 * 3.0857e18 / t_drift_shell)
+
+# def integrate_over_recombination_distance(E_type, N, r, m_1, e):
+#     """
+#     Integrate the electric field over the recombination distance to determine how the recombination time will be affected by the electric field.    
+#     Parameters:
+#     E : float
+#         Electric field strength (esu/cm^2).
+#     r : float
+#         Distance over which to integrate (cm).
+#     m_1 : float
+#         Mass of the electron (grams).
+#     e : float
+#         Charge of the electron (esu).
+        
+#     Returns:
+#     t: float
+#         Time for an electron to drift back over distance r under the influence of electric field E.
+#     """
+#     # get a grid of points over the distance r
+#     dr = r / 1000 # cm, step size for integration
+#     r_grid = np.arange(0, r, dr) # cm, grid of points  
+
+#     E = N * e / (r)**2 # dyne/esu, function for electric field based on the number of protons and distance
+
+#     # get the electric field at each point in the grid (assuming uniform field for simplicity)
+#     E_grid = np.full_like(r_grid, E) # dyne/esu, uniform electric field
+
+#     # get the acceleration of the electron at each point in the grid
+#     a_grid = (e * E_grid) / m_1 # cm/s^2
+
+#     # integrate the acceleration over the distance to get the final velocity
+#     v_final = np.trapz(a_grid, r_grid) # cm/s
+
+#     # get the time for the electron to drift back over distance r under the influence of electric field E
+#     t = r / v_final # s
+    
+#     return t
+
+# t_sphere = integrate_over_recombination_distance('sphere', N_sphere, 0.1*3.0857e18, m_1, e)
+# t_shell = integrate_over_recombination_distance('shell', N_shell, (50e3+0.1)*3.0857e18, m_1, e)
+
+# print("Timescale for electron drift back from a sphere of 0.1 pc radius filled with protons is: %3.3e s" % t_sphere)
+# print("Timescale for electron drift back from a 1 cMpc shell filled with protons is: %3.3e s" % t_shell)
+
+# get the timescale for electron drift back given that every ionized electron will create a dipole and electric field
+# t_drift_shell = np.sqrt((2 * m_1 * 0.1 * 3.0857e18) / (e * E_shell)) # s (use thermal velocity for the electron?)
+# print("Timescale for electron drift back from a 1 cMpc shell filled with protons is: %3.3e s" % t_drift_shell)
+
+# get the timescale for electron drift back given that every ionized electron will create a dipole and electric field
+# t_drift_sphere = np.sqrt((2 * m_1 * 0.1 * 3.0857e18) / (e * E_sphere)) # s (use thermal velocity for the electron?)
+# print("Timescale for electron drift back from a sphere of 0.1 pc radius filled with protons is: %3.3e s" % t_drift_sphere)
+
+# print(0.1 * 3.0857e18 / t_drift_shell)
 
 # --------------
 # get the timescale for electron drift back given that every ionized electron will create a dipole and electric field
