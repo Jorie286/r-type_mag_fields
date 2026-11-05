@@ -222,8 +222,11 @@ print("Small scale eddy circulation time: %3.3e yr" % (t_eddy * (1/(np.pi * 1e7)
 
 # --------------
 # get separation of electrons from protons given extra energy of 5 eV (from photoionization)
-r = np.sqrt((3 * 5 * 1.602e-12) / (2 * np.pi * n_2 * e**2)) # cm
+r = ((3 * 5 * 1.602e-12) / (4 * np.pi**2 * n_2 * e**2))**(1/4) # cm
 print("\nSeparation of electrons from protons given extra energy of 5 eV (from photoionization): %3.3e cm" % r)
+
+r_1 = (5 * 1.602e-12)/(-4*np.pi*e**2)
+print(r_1)
 
 # get the electric field for a sphere filled with protons
 N_sphere = (4/3) * np.pi * (r)**3 * n_2 # number of protons in the sphere
