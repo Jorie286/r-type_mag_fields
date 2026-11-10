@@ -37,8 +37,6 @@ print(r"Electron velocity in r: %2.3e cm/s" % v_1)
 # theta hat velocity
 v_t = 1e6 # cm/s (10 km/s)
 
-# assume no phi hat velocity?
-
 #---------
 n_0 = 5.17e-3 / (1 + 30)**3  # based on z=30 numbers
 #print("H number density now: %2.3e cm^-3" % n_0)
@@ -48,6 +46,42 @@ print("H number density at z=20: %2.3e cm^-3" % n_2)
 
 n_e = n_2 # cm^-3 (assuming fully ionized hydrogen)
 
+# ---------
+# get the ionization front radius at which the electron velocity is greater than the ionization front velocity
+N_phot = 1e53 # s^-1 (number of ionizing photons emitted by the star per second)
+
+# v_ion = N_phot/(4 * np.pi * r**2 * n_2) #cm/s
+
+def min_r_for_ve_gt_vion(N_phot, E, n_e, m_e):
+    """
+    Calculate the minimum radius at which the electron velocity is greater than the ionization front velocity.
+    
+    Parameters:
+    N_phot : float
+        Number of ionizing photons emitted by the star per second.
+    E : float
+        Energy of the electron (erg).
+    n_e : float
+        Electron number density (cm^-3).
+    m_e : float
+        Mass of the electron (grams).
+        
+    Returns:
+    r_min : float
+        Minimum radius (cm) at which the electron velocity is greater than the ionization front velocity.
+    """
+
+    # calculate the electron velocity for a given energy
+    v_e = np.sqrt(2 * E / m_e) # cm/s
+    
+    # Calculate the minimum radius for a given electron velocity and energy
+    r_min = np.sqrt(N_phot/(4 * np.pi * n_e * v_e)) # cm
+    
+    return r_min
+
+r_min = min_r_for_ve_gt_vion(10**53, 10, n_e, m_1)
+r_min_pc = r_min / 3.0857e18 # convert to pc
+print("\nMinimum radius at which the electron velocity is greater than the ionization front velocity: %2.3e pc" % r_min_pc)
 
 #---------
 # calculating the values for t_defl (does not depend on theta hat velocity)
@@ -58,7 +92,7 @@ Lambda = ((k * T)/(np.pi * n_e))**0.5 * ((m_1 * v_1**2) / 2) * 1/(np.abs(Z_1 * Z
 t_defl = (m_1**2 * v_1**3) / (8 * np.pi * Z_1**2 * Z_2**2 * e**4 * n_2 * np.log(Lambda)) # s
 
 t_defl_yr = t_defl*(1/(np.pi * 1e7)) # convert the deflection time to years
-print("Deflection time is %3.3e yr" % t_defl_yr)
+print("\nDeflection time is %3.3e yr" % t_defl_yr)
 
 
 #---------
