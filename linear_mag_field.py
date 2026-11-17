@@ -21,6 +21,8 @@ z = 20 # redshift
 
 c = 3e10 # cm/s
 
+ev_to_erg = 1.6e-12
+
 epsilon_0 = 1 # in cgs units
 
 # CHECK THIS VALUE
@@ -79,9 +81,26 @@ def min_r_for_ve_gt_vion(N_phot, E, n_e, m_e):
     
     return r_min
 
-r_min = min_r_for_ve_gt_vion(10**53, 10, n_e, m_1)
+r_min = min_r_for_ve_gt_vion(10**53, 10*ev_to_erg, n_e, m_1)
 r_min_pc = r_min / 3.0857e18 # convert to pc
 print("\nMinimum radius at which the electron velocity is greater than the ionization front velocity: %2.3e pc" % r_min_pc)
+
+v_e_2 = np.sqrt(2 * 10*ev_to_erg / m_1)
+print(v_e_2)
+
+
+Lambda = ((k * T)/(np.pi * n_e))**0.5 * ((m_1 * v_e_2**2) / 2) * 1/(np.abs(Z_1 * Z_2) * e**3)
+
+t_defl_2 = (m_1**2 * v_e_2**3) / (8 * np.pi * Z_1**2 * Z_2**2 * e**4 * n_2 * np.log(Lambda)) # s
+
+t_defl_yr_2 = t_defl_2*(1/(np.pi * 1e7)) # convert the deflection time to years
+print("Alt Deflection time is %3.3e yr" % t_defl_yr_2)
+
+
+# get alternative mfp which depends on the energy of the electron
+mfp_2 = v_e_2*t_defl_2
+mfp_2_pc = mfp_2 / 3.0857e18
+print("Alt mean free path of electrons %3.3e pc" % mfp_2_pc)
 
 #---------
 # calculating the values for t_defl (does not depend on theta hat velocity)
