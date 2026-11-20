@@ -1,10 +1,11 @@
 # plot the ionization front velocity evolution relative to radius
 import matplotlib.pyplot as plt
+from matplotlib.ticker import StrMethodFormatter
 import numpy as np
 from scipy.integrate import quad
 
 # get a range of radii
-r = np.logspace(20.5, 21.5, 100) # (cm) get distances out to ~ 100 pc
+r = np.logspace(23, 23.5, 100) # (cm) get distances out to ~ 100 pc
 
 E_phot = [2, 10, 20] # (eV) a range of post-reionization energies for electrons
 
@@ -102,7 +103,7 @@ def N_phot_total(M, T, E_min):
     return N_phot_total, error
 
 N_phot_total_value, error = N_phot_total(M_star, T_star, 13.6)
-print(f"Total number of photons emitted per second: {N_phot_total_value:.2e} photons/s (error: {error:.2e})")
+print(f"Total number of photons emitted per second: {N_phot_total_value:.2e} photons/s")
 
 # using table 1 of Bromm et al. 2001, find the number of photons emitted per second (claims to be applicable for above 300 M_sun)
 print(f"\nNumber of ionizing photons emitted per second for 13.6 eV: {1.6e48 * 1e5:.2e}")
@@ -134,11 +135,14 @@ N_phot = 1e53 # photons/s
 f = 0.5 # ionization fraction
 p_f = 1e-4 # fraction of the atoms that were already ionized before the front moves through
 n_H = 1.607e-3 # number density of protons
-n_e = f* (1 - p_f) * 1.607e-3 # number density of electrons correcting for ionization fraction
+n_e = 1.607e-3 * f * (1 - p_f) # number density of electrons correcting for ionization fraction
 
 # calculate the ionization front velocity at each radius
+v = 0
 for (i, R) in enumerate(r):
-    v_i[i] = v_ion(R, N_phot, n_H)
+    v = v_ion(R, N_phot, n_H)
+    v_i[i] = v * 1e-5
+    v=0
 
 
 E_list = [2, 10, 20] # eV
@@ -148,11 +152,17 @@ for E in E_list:
     v_e.append(np.sqrt(2 * (E * ev_to_erg) / m_e)) # cm/s
 
 fig, ax = plt.subplots()
-ax.plot(r*cm_to_pc, v_i*1e-5, label = "Ionization Front Velocity")
+ax.plot(r*cm_to_pc, v_i, label = "Ionization Front Velocity")
 ax.set_xlabel("Radius (pc)")
 ax.set_ylabel("Velocity (km/s)")
-ax.hlines(v_e[0], min(r*cm_to_pc), max(r*cm_to_pc), "r", linestyle = "--", label = "Electron Energy = 2 eV")
-ax.hlines(v_e[1], min(r*cm_to_pc), max(r*cm_to_pc), "g", linestyle = "--", label = "Electron Energy = 10 eV")
-ax.hlines(v_e[2], min(r*cm_to_pc), max(r*cm_to_pc), "m", linestyle = "--", label = "Electron Energy = 20 eV")
+ax.hlines(v_e[0]*1e-5, min(r*cm_to_pc), max(r*cm_to_pc), "r", linestyle = "--", label = "Electron Energy = 2 eV")
+ax.hlines(v_e[1]*1e-5, min(r*cm_to_pc), max(r*cm_to_pc), "g", linestyle = "--", label = "Electron Energy = 10 eV")
+ax.hlines(v_e[2]*1e-5, min(r*cm_to_pc), max(r*cm_to_pc), "m", linestyle = "--", label = "Electron Energy = 20 eV")
+# ax.hlines(3e10*1e-5, min(r*cm_to_pc), max(r*cm_to_pc), "k", linestyle = "--", label = "Speed of Light")
+ax.xaxis.set_major_formatter(StrMethodFormatter('{x:.0e}'))
+# get minor gridlines
+ax.minorticks_on()
+ax.grid(which='major', color='#CCCCCC', linestyle='-', linewidth=0.5)
+ax.grid(which='minor', color='#EEEEEE', linestyle=':', linewidth=0.5)
 ax.legend()
 plt.show()
